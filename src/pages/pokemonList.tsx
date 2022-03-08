@@ -29,32 +29,12 @@ const PokemonList = () => {
 
     return (
       <div css={cardContainerStyle}>
-        <Card fluid style={css({margin: "10px"})}>
-          <div css={css({
-            display: "flex",
-            flexDirection: "column",
-            padding: "1rem"
-          })}>
-            <img src={data.sprite} alt="pokemon-default-front" />
-            <span>{data.name}</span>
-          </div>
-          <div css={css({
-            background: "rgba(99, 99, 99, 0.2)",
-            borderRadius: "0 0 15px 15px",
-            padding: "0.5rem 1rem",
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-between"
-          })}>
-            <span>OWNED</span>
-            <span>{data.owned}</span>
-          </div>
-        </Card>
+        <Card data={data} fluid style={css({margin: "10px"})} />
       </div>
     )
   }
 
-  const containerStyle = css({
+  const listStyle = css({
     display: "flex",
     flexDirection: "row",
     flexWrap: "wrap",
@@ -62,8 +42,11 @@ const PokemonList = () => {
   })
 
   return (
-    <div css={containerStyle}>
-      {pokemonData.map((data: PokemonData) => renderCard(data))}
+    <div>
+      <h1>Pokémon List</h1>
+      <div css={listStyle}>
+        {pokemonData.map((data: PokemonData) => renderCard(data))}
+      </div>
     </div>
   )
 }

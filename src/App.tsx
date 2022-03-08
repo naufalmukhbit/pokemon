@@ -1,13 +1,23 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
-import PokemonList from './pages/pokemonList';
 import Header from './components/header';
+import { Route, Routes } from 'react-router-dom';
+
+import PokemonList from './pages/pokemonList';
+import PokemonDetail from './pages/pokemonDetail';
+import MyPokemon from './pages/myPokemon';
 
 function App() {
   return (
     <div className="App">
       <Header />
+      <Routes>
+        <Route path="/" element={<PokemonList />} />
+        <Route path="pokemon/:pokemonName" element={<PokemonDetail />} />
+        <Route path="my-pokemon" element={<MyPokemon />} />
+        <Route path="test" element={<h1>TEST</h1>} />
+      </Routes>
       {/* <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
@@ -22,10 +32,6 @@ function App() {
           Learn React
         </a>
       </header> */}
-      <h1>Pokémon List</h1>
-      <div>
-        <PokemonList />
-      </div>
     </div>
   );
 }

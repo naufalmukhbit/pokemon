@@ -1,5 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
+import { Link } from "react-router-dom";
 
 const Header = () => {
   const headerContainerStyle = css({
@@ -12,13 +13,22 @@ const Header = () => {
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
-    padding: "1rem",
+    padding: "1rem"
+  })
+
+  const linkStyle = css({
+    textDecoration: "none",
+    color: "black"
   })
   return (
     <div css={headerContainerStyle}>
       <div css={headerStyle}>
-        <span>Pokemon</span>
-        <span>My Pokémon</span>
+        <Link to="/" css={linkStyle}>
+          <span>Pokemon</span>
+        </Link>
+        <Link to="/my-pokemon" css={linkStyle}>
+          <span>My Pokémon</span>
+        </Link>
       </div>
     </div>
   )
