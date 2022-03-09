@@ -2,6 +2,7 @@
 import { css, SerializedStyles } from "@emotion/react";
 import { ReactNode } from "react";
 import { Link } from "react-router-dom";
+import { capitalize } from "../utils/capitalize";
 
 interface CardProps {
   data: {
@@ -33,7 +34,7 @@ const Card = ({data, style, fluid}: CardProps) => {
         padding: "1rem"
       })}>
         <img src={data.sprite} alt="pokemon-default-front" />
-        <span>{data.name}</span>
+        <span>{capitalize(data.name)}</span>
       </div>
       <div css={css({
         background: "rgba(99, 99, 99, 0.2)",
