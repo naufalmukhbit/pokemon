@@ -31,9 +31,13 @@ const Card = ({data, style, fluid}: CardProps) => {
       <div css={css({
         display: "flex",
         flexDirection: "column",
+        alignItems: "center",
         padding: "1rem"
       })}>
-        <img src={data.sprite} alt="pokemon-default-front" />
+        <img css={css({
+          maxWidth: 100,
+          maxHeight: 100,
+        })} src={data.sprite} alt="pokemon-default-front" />
         <span>{capitalize(data.name)}</span>
       </div>
       <div css={css({

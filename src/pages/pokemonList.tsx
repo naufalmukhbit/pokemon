@@ -5,6 +5,7 @@ import Card from "../components/card";
 import { useEffect, useState } from "react";
 import { GET, POST } from "../utils/restAPI";
 import { capitalize } from "../utils/capitalize";
+import Container from "../components/container";
 
 interface PokemonData {
   name: string;
@@ -18,7 +19,7 @@ const PokemonList = () => {
   const [pokemonData, setPokemonData] = useState([]);
 
   useEffect(() => {
-    GET("https://pokeapi.co/api/v2/pokemon/?limit=30").then(
+    GET("https://pokeapi.co/api/v2/pokemon/?limit=36").then(
       (res) => {
         res &&
           setPokemonData(
@@ -34,7 +35,7 @@ const PokemonList = () => {
     );
   }, []);
 
-  const renderCard = (data: PokemonData) => {
+  const renderCard = (data: PokemonData, index: number) => {
     const cardContainerStyle = css({
       display: "flex",
       flexDirection: "column",
@@ -47,10 +48,13 @@ const PokemonList = () => {
       [mq[1]]: {
         flexBasis: "33.33%",
       },
+      [mq[2]]: {
+        flexBasis: "25%",
+      },
     });
 
     return (
-      <div css={cardContainerStyle}>
+      <div css={cardContainerStyle} key={data.name + index}>
         <Card data={data} fluid style={css({ margin: "10px" })} />
       </div>
     );
@@ -64,18 +68,16 @@ const PokemonList = () => {
   });
 
   return (
-    <div>
-      <div>
-        <h1 css={css({
-          [mq[1]]: {
-            padding: "1rem 0"
-          }
-        })}>Pokémon List</h1>
-        <div css={listStyle}>
-          {pokemonData.map((data: PokemonData) => renderCard(data))}
-        </div>
+    <Container>
+      <h1 css={css({
+        [mq[1]]: {
+          padding: "1rem 0"
+        }
+      })}>Pokémon List</h1>
+      <div css={listStyle}>
+        {pokemonData.map((data: PokemonData, index: number) => renderCard(data, index))}
       </div>
-    </div>
+    </Container>
   );
 };
 
