@@ -1,6 +1,5 @@
 /** @jsxImportSource @emotion/react */
 import { css, SerializedStyles } from "@emotion/react";
-import { ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { capitalize } from "../utils/capitalize";
 
@@ -12,9 +11,10 @@ interface CardProps {
   };
   style?: SerializedStyles;
   fluid?: boolean;
+  saved?: boolean;
 }
 
-const Card = ({data, style, fluid}: CardProps) => {
+const Card = ({data, style, fluid, saved}: CardProps) => {
   const cardStyle = css({
     display: "flex",
     flexDirection: "column",
@@ -46,10 +46,14 @@ const Card = ({data, style, fluid}: CardProps) => {
         padding: "0.5rem 1rem",
         display: "flex",
         flexDirection: "row",
-        justifyContent: "space-between"
+        justifyContent: saved ? "center" :"space-between"
       })}>
-        <span>OWNED</span>
-        <span>{data.owned}</span>
+        {saved ? data.owned : (
+          <>
+            <span>OWNED</span>
+            <span>{data.owned}</span>
+          </>
+        )}
       </div>
     </Link>
   )

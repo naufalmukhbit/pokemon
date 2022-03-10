@@ -3,6 +3,7 @@ import { css } from "@emotion/react";
 import { useEffect, useState } from "react";
 import Button from "../components/themedButton";
 import { oddEvenRandomizer, randomNumber } from "../utils/randomizer";
+import { savePokemon } from "../utils/savePokemon";
 
 interface CaptureType {
   pokemon: {
@@ -18,6 +19,7 @@ const CapturePokemon = ({ pokemon }: CaptureType) => {
 
   const [capturing, setCapturing] = useState(false);
   const [captureStatus, setCaptureStatus] = useState<captureType>("idle");
+  const [nickname, setNickname] = useState("");
 
   useEffect(() => {
     if (capturing) {
@@ -34,8 +36,19 @@ const CapturePokemon = ({ pokemon }: CaptureType) => {
       setCaptureStatus("capturing");
       setCapturing(true);
     } else {
-      setCaptureStatus("idle");
-      setCapturing(false);
+      if (captureStatus === "success") {
+        if (nickname !== "") {
+          savePokemon(pokemon, nickname);
+          setNickname("");
+          setCaptureStatus("idle");
+          setCapturing(false);
+        } else {
+          alert("Give your pokemon a nickname!");
+        }
+      } else {
+        setCaptureStatus("idle");
+        setCapturing(false);
+      }
     }
   }
 
@@ -99,6 +112,9 @@ const CapturePokemon = ({ pokemon }: CaptureType) => {
             : captureStatus === "failed"
             ? "Failed to catch Pokemon! :("
             : "Capturing..."}
+          {captureStatus === "success" && (
+            <input placeholder="Pokemon nickname..." onChange={(e) => setNickname(e.target.value)} />
+          )}
           {(captureStatus === "success" || captureStatus === "failed") && (
             <Button types={pokemon.types} onClick={() => onCapture(false)}>
               CLOSE
