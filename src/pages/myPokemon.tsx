@@ -1,13 +1,13 @@
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
-import Card from "../components/card";
+import { MyPokemonCard } from "../components/card";
 import { useEffect, useState } from "react";
 import Container from "../components/container";
 
 interface PokemonData {
   name: string;
   imageURL: string;
-  nickname: number;
+  nickname: string;
 }
 
 const MyPokemon = () => {
@@ -25,28 +25,22 @@ const MyPokemon = () => {
       display: "flex",
       flexDirection: "column",
       width: "100%",
-      flexGrow: 1,
-      flexShrink: 1,
+      flexGrow: 0,
+      flexShrink: 0,
       [mq[0]]: {
-        flexBasis: "100%",
+        flexBasis: "50%",
       },
       [mq[1]]: {
-        flexBasis: "50%",
+        flexBasis: "33.33%",
+      },
+      [mq[1]]: {
+        flexBasis: "25%",
       },
     });
 
     return (
       <div css={cardContainerStyle} key={data.name + index}>
-        <Card
-          data={{
-            name: data.name,
-            sprite: data.imageURL,
-            owned: data.nickname,
-          }}
-          saved
-          fluid
-          style={css({ margin: "10px" })}
-        />
+        <MyPokemonCard data={data} />
       </div>
     );
   };
@@ -55,7 +49,7 @@ const MyPokemon = () => {
     display: "flex",
     flexDirection: "row",
     flexWrap: "wrap",
-    justifyContent: "center",
+    justifyContent: "flex-start",
   });
 
   return (
@@ -74,7 +68,14 @@ const MyPokemon = () => {
           ? pokemonData.map((data: PokemonData, index: number) =>
               renderCard(data, index)
             )
-          : "You don't have any pokemon!"}
+          : (
+            <span css={css({
+              width: "100%",
+              textAlign: "center",
+            })}>
+              You don't have any pokemon!
+            </span>
+          )}
       </div>
     </Container>
   );

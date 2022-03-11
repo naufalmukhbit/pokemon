@@ -4,9 +4,10 @@ import { Link } from "react-router-dom";
 
 const Header = () => {
   const headerContainerStyle = css({
-    background: "white",
+    background: "#202020",
     position: "sticky",
     top: 0,
+    zIndex: 9,
   });
   
   const headerStyle = css({
@@ -14,8 +15,7 @@ const Header = () => {
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
-    paddingLeft: "0.5rem",
-    paddingRight: "1rem",
+    padding: "0.5rem 1rem",
     alignItems: "center",
   });
   
@@ -25,7 +25,7 @@ const Header = () => {
   
   const linkStyle = css({
     textDecoration: "none",
-    color: "black",
+    color: "white",
   });
   return (
     <div css={headerContainerStyle}>

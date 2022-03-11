@@ -5,7 +5,6 @@ import { GET } from "../utils/restAPI";
 import { capitalize } from "../utils/capitalize";
 import { css } from "@emotion/react";
 import Container from "../components/container";
-import Button from "../components/themedButton";
 import CapturePokemon from "../components/capture";
 
 const PokemonDetail = () => {

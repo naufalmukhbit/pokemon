@@ -1,9 +1,10 @@
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
 import { useEffect, useState } from "react";
-import Button from "../components/themedButton";
+import {ThemedButton} from "./button";
 import { oddEvenRandomizer, randomNumber } from "../utils/randomizer";
-import { savePokemon } from "../utils/savePokemon";
+import { savePokemon } from "../utils/myPokemon";
+import Modal from "./modal";
 
 interface CaptureType {
   pokemon: {
@@ -27,7 +28,7 @@ const CapturePokemon = ({ pokemon }: CaptureType) => {
       setTimeout(() => {
         let status = oddEvenRandomizer(captureToken);
         setCaptureStatus(status ? "success" : "failed");
-      }, 5000);
+      }, 3500);
     }
   }, [capturing]);
 
@@ -38,10 +39,13 @@ const CapturePokemon = ({ pokemon }: CaptureType) => {
     } else {
       if (captureStatus === "success") {
         if (nickname !== "") {
-          savePokemon(pokemon, nickname);
-          setNickname("");
-          setCaptureStatus("idle");
-          setCapturing(false);
+          if (savePokemon(pokemon, nickname)) {
+            setNickname("");
+            setCaptureStatus("idle");
+            setCapturing(false);
+          } else {
+            alert("Nickname already exists!");
+          }
         } else {
           alert("Give your pokemon a nickname!");
         }
@@ -50,7 +54,7 @@ const CapturePokemon = ({ pokemon }: CaptureType) => {
         setCapturing(false);
       }
     }
-  }
+  };
 
   return (
     <>
@@ -67,61 +71,34 @@ const CapturePokemon = ({ pokemon }: CaptureType) => {
             padding: "1rem",
           })}
         >
-          <Button types={pokemon.types} onClick={() => onCapture(true)}>
+          <ThemedButton types={pokemon.types} onClick={() => onCapture(true)}>
             CAPTURE
-          </Button>
+          </ThemedButton>
         </div>
       </div>
-      <div
-        css={css({
-          position: "fixed",
-          top: 0,
-          right: 0,
-          bottom: 0,
-          left: 0,
-          backgroundColor: "rgba(0, 0, 0, 0.5)",
-          display: capturing ? "flex" : "none",
-          justifyContent: "center",
-          alignItems: "center",
-          padding: "2rem",
-        })}
-      >
-        <div
-          css={css({
-            backgroundColor: "white",
-            padding: "2rem",
-            borderRadius: 10,
-            height: "100%",
-            width: "100%",
-            maxHeight: 200,
-            maxWidth: 480,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            gap: 20,
-          })}
-        >
-          <img
-            css={css({height: 100, width: 100})}
-            src={pokemon.image}
-            alt="pokemon-default-front"
+      <Modal visible={capturing}>
+        <img
+          css={css({ height: 100, width: 100 })}
+          src={pokemon.image}
+          alt="pokemon-default-front"
+        />
+        {captureStatus === "success"
+          ? "Pokemon Captured!"
+          : captureStatus === "failed"
+          ? "Failed to catch Pokemon! :("
+          : "Capturing..."}
+        {captureStatus === "success" && (
+          <input
+            placeholder="Pokemon nickname..."
+            onChange={(e) => setNickname(e.target.value)}
           />
-          {captureStatus === "success"
-            ? "Pokemon Captured!"
-            : captureStatus === "failed"
-            ? "Failed to catch Pokemon! :("
-            : "Capturing..."}
-          {captureStatus === "success" && (
-            <input placeholder="Pokemon nickname..." onChange={(e) => setNickname(e.target.value)} />
-          )}
-          {(captureStatus === "success" || captureStatus === "failed") && (
-            <Button types={pokemon.types} onClick={() => onCapture(false)}>
-              CLOSE
-            </Button>
-          )}
-        </div>
-      </div>
+        )}
+        {(captureStatus === "success" || captureStatus === "failed") && (
+          <ThemedButton types={pokemon.types} onClick={() => onCapture(false)}>
+            CLOSE
+          </ThemedButton>
+        )}
+      </Modal>
     </>
   );
 };
