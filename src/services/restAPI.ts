@@ -20,9 +20,12 @@ export const POST = async (url: string, body: object, header = Header): Promise<
   }
 };
 
-export const GET = async (url: string, header = Header): Promise<any> => {
+export const GET = async (url: string, query: any, header = Header): Promise<any> => {
   try {
-    const res = await fetch(url, {
+    let queries = (new URLSearchParams(query)).toString();
+    let queryParams = queries && queries !== "" ? "?" + queries : "";
+    
+    const res = await fetch(url + queryParams, {
       method: "GET",
       headers: header,
     });

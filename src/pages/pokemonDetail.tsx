@@ -1,11 +1,12 @@
 /** @jsxImportSource @emotion/react */
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { GET } from "../utils/restAPI";
+import { GET } from "../services/restAPI";
 import { capitalize } from "../utils/capitalize";
 import { css } from "@emotion/react";
 import Container from "../components/container";
 import CapturePokemon from "../components/capture";
+import { BASE_URL_POKEMON } from "../services/apiConfig";
 
 const PokemonDetail = () => {
   type pokemonType = {
@@ -18,7 +19,7 @@ const PokemonDetail = () => {
   const [pokemonData, setPokemonData] = useState<pokemonType>();
 
   useEffect(() => {
-    GET("https://pokeapi.co/api/v2/pokemon/" + params.pokemonName).then(
+    GET(BASE_URL_POKEMON + params.pokemonName, {}).then(
       (res) => {
         res &&
           setPokemonData({

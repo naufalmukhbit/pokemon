@@ -1,37 +1,17 @@
 /** @jsxImportSource @emotion/react */
-import { css } from "@emotion/react";
+import { css, SerializedStyles } from "@emotion/react";
 import { ReactNode } from "react";
 import { availableTypeColors } from "../constants/typeColors";
 
 interface ButtonProps {
   children: ReactNode;
+  style?: SerializedStyles | SerializedStyles[];
   onClick?: () => void;
-  background?: string;
-  width?: string | number;
-  height?: string | number;
 }
 
-const Button = ({
-  children,
-  background,
-  width,
-  height,
-  onClick,
-}: ButtonProps) => {
+const Button = ({ children, style, onClick }: ButtonProps) => {
   return (
-    <button
-      css={css({
-        background: background ?? "black",
-        height: height ?? "3rem",
-        width: width ?? "100%",
-        border: "none",
-        borderRadius: 10,
-        color: "white",
-        textShadow: "0px 2px 10px rgba(0,0,0,0.2)",
-        fontSize: 20,
-      })}
-      onClick={onClick}
-    >
+    <button css={[styles.buttonStyle, style]} onClick={onClick}>
       {children}
     </button>
   );
@@ -58,10 +38,23 @@ const ThemedButton = ({ types, children, onClick }: ThemedButtonProps) => {
       : availableTypeColors.unknown;
 
   return (
-    <Button onClick={onClick} background={color}>
+    <Button onClick={onClick} style={css({ background: color })}>
       {children}
     </Button>
   );
+};
+
+const styles = {
+  buttonStyle: css({
+    background: "black",
+    height: "3rem",
+    width: "100%",
+    border: "none",
+    borderRadius: 10,
+    color: "white",
+    textShadow: "0px 2px 10px rgba(0,0,0,0.2)",
+    fontSize: 20,
+  }),
 };
 
 export { Button, ThemedButton };

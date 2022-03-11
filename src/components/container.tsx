@@ -11,7 +11,7 @@ const Container = ({ children }: ContainerProps) => {
   return (
     <div
       css={css({
-        padding: "0 0.5rem 3rem",
+        padding: "1rem",
         margin: "auto",
         [screen[2]]: {
           maxWidth: 768,

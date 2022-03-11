@@ -68,10 +68,13 @@ const MyPokemonCard = ({ data }: MyPokemonCardProps) => {
       </div>
       <Modal visible={deleteConfirmation}>
         Are you sure you want to release this Pokemon?
-        <Button background="green" onClick={onDelete}>
+        <Button style={css({ background: "green" })} onClick={onDelete}>
           YES
         </Button>
-        <Button background="red" onClick={() => setDeleteConfirmation(false)}>
+        <Button
+          style={css({ background: "red" })}
+          onClick={() => setDeleteConfirmation(false)}
+        >
           NO
         </Button>
       </Modal>
@@ -90,7 +93,7 @@ const styles = {
     boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
     textDecoration: "none",
     color: "black",
-    margin: 10,
+    // margin: 10,
   }),
   pokemonInfoContainer: css({
     display: "flex",
