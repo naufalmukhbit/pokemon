@@ -22,6 +22,8 @@ const PokemonListCard = ({ data }: PokemonListCardProps) => (
         css={styles.pokemonImage}
         src={data.sprite}
         alt="pokemon-default-front"
+        width={100}
+        height={100}
       />
       <span>{capitalize(data.name)}</span>
     </div>
@@ -60,6 +62,8 @@ const MyPokemonCard = ({ data }: MyPokemonCardProps) => {
           css={styles.pokemonImage}
           src={data.imageURL}
           alt="pokemon-default-front"
+          width={100}
+          height={100}
         />
         <span>{capitalize(data.name)}</span>
       </div>
@@ -93,7 +97,6 @@ const styles = {
     boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
     textDecoration: "none",
     color: "black",
-    // margin: 10,
   }),
   pokemonInfoContainer: css({
     display: "flex",

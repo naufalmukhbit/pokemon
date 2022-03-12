@@ -2,7 +2,7 @@
 import { css } from "@emotion/react";
 import { MyPokemonCard } from "../components/card";
 import { useEffect, useState } from "react";
-import Container from "../components/container";
+import Container, { ListSkeletonContainer } from "../components/container";
 
 interface PokemonData {
   name: string;
@@ -14,10 +14,13 @@ const MyPokemon = () => {
   const breakpoints = [320, 576, 768, 992, 1200];
   const mq = breakpoints.map((width) => `@media (min-width: ${width}px)`);
   const [pokemonData, setPokemonData] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    setLoading(true);
     let savedPokemon = localStorage.getItem("my-pokemon");
     setPokemonData(savedPokemon ? JSON.parse(savedPokemon) : []);
+    setLoading(false);
   }, []);
 
   const renderCard = (data: PokemonData, index: number) => {
@@ -53,7 +56,7 @@ const MyPokemon = () => {
   });
 
   return (
-    <Container>
+    <ListSkeletonContainer loading={loading}>
       <h1
         css={css({
           [mq[1]]: {
@@ -77,7 +80,7 @@ const MyPokemon = () => {
             </span>
           )}
       </div>
-    </Container>
+    </ListSkeletonContainer>
   );
 };
 

@@ -1,27 +1,40 @@
 /** @jsxImportSource @emotion/react */
-import './App.css';
-import Header from './components/header';
-import { Route, Routes } from 'react-router-dom';
-import { css } from '@emotion/react';
+import { lazy, Suspense } from "react";
+import { Route, Routes, useLocation } from "react-router-dom";
 
-import PokemonList from './pages/pokemonList';
-import PokemonDetail from './pages/pokemonDetail';
-import MyPokemon from './pages/myPokemon';
-import PageNotFound from './pages/notFound';
+import Header from "./components/header";
+import { CardListSkeleton, DetailSkeleton } from "./components/skeleton";
+
+import "./App.css";
+
+const PokemonList = lazy(() => import("./pages/pokemonList"));
+const PokemonDetail = lazy(() => import("./pages/pokemonDetail"));
+const MyPokemon = lazy(() => import("./pages/myPokemon"));
+const PageNotFound =  lazy(() => import("./pages/notFound"));
 
 function App() {
-  const breakpoints = [320, 576, 768, 992, 1200];
-  const mq = breakpoints.map((width) => `@media (min-width: ${width}px)`);
+  const { pathname } = useLocation();
+
+  const fallback = (path: string) => {
+    switch (path) {
+      case "/" || "/my-pokemon":
+        return <CardListSkeleton />;
+      default:
+        return <DetailSkeleton />;
+    }
+  };
 
   return (
     <div className="App">
       <Header />
-      <Routes>
-        <Route path="/" element={<PokemonList />} />
-        <Route path="pokemon/:pokemonName" element={<PokemonDetail />} />
-        <Route path="my-pokemon" element={<MyPokemon />} />
-        <Route path="*" element={<PageNotFound />} />
-      </Routes>
+      <Suspense fallback={fallback(pathname)}>
+        <Routes>
+          <Route path="/" element={<PokemonList />} />
+          <Route path="pokemon/:pokemonName" element={<PokemonDetail />} />
+          <Route path="my-pokemon" element={<MyPokemon />} />
+          <Route path="*" element={<PageNotFound />} />
+        </Routes>
+      </Suspense>
     </div>
   );
 }

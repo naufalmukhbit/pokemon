@@ -34,6 +34,7 @@ export const GET = async (url: string, query: any, header = Header): Promise<any
       res: await res.json()
     }
   } catch (err) {
-    throw err;
+    // throw err;
+    return false;
   }
 };

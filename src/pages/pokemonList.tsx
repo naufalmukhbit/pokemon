@@ -1,11 +1,12 @@
 /** @jsxImportSource @emotion/react */
-import { css } from "@emotion/react";
-import { PokemonListCard } from "../components/card";
 import { useEffect, useState } from "react";
-import { GET } from "../services/restAPI";
-import Container from "../components/container";
-import { BASE_URL_POKEMON, BASE_URL_SPRITES } from "../services/apiConfig";
+import { css } from "@emotion/react";
+
+import { PokemonListCard } from "../components/card";
+import { ListSkeletonContainer } from "../components/container";
 import { Button } from "../components/button";
+import { BASE_URL_POKEMON, BASE_URL_SPRITES } from "../services/apiConfig";
+import { GET } from "../services/restAPI";
 
 interface PokemonData {
   name: string;
@@ -17,7 +18,8 @@ const PokemonList = () => {
   const ownedPokemons = localStorage.getItem("my-owned");
   const owned = ownedPokemons ? JSON.parse(ownedPokemons) : {};
 
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
   const [pokemonData, setPokemonData] = useState<PokemonData[]>([]);
   const [nextPokemonList, setNextPokemonList] = useState<string | null>("");
   const [showBackToTop, setShowBackToTop] = useState(false);
@@ -38,16 +40,18 @@ const PokemonList = () => {
   });
 
   useEffect(() => {
+    setLoading(true);
     GET(BASE_URL_POKEMON, { limit: 36 }).then((res) => {
       if (res) {
         setNextPokemonList(res.res.next);
         setPokemonData(res.res.results.map(mapResToState));
       }
+      setLoading(false);
     });
   }, []);
 
   const loadMore = () => {
-    setLoading(true);
+    setLoadingMore(true);
     GET(nextPokemonList!, {}).then((res) => {
       if (res) {
         setNextPokemonList(res.res.next);
@@ -56,7 +60,7 @@ const PokemonList = () => {
           ...res.res.results.map(mapResToState),
         ]);
       }
-      setLoading(false);
+      setLoadingMore(false);
     });
   };
 
@@ -67,15 +71,16 @@ const PokemonList = () => {
   );
 
   const scrollToTop = () => {
-    showBackToTop && window.scrollTo({
-      top: 0,
-      left: 0,
-      behavior: "smooth",
-    });
+    showBackToTop &&
+      window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: "smooth",
+      });
   };
 
   return (
-    <Container>
+    <ListSkeletonContainer loading={loading}>
       <h1 css={styles.title}>Pokémon List</h1>
       <div css={styles.list}>
         {pokemonData.map((data: PokemonData, index: number) =>
@@ -84,21 +89,24 @@ const PokemonList = () => {
       </div>
       {nextPokemonList &&
         nextPokemonList !== null &&
-        (!loading ? (
+        (!loadingMore ? (
           <Button style={styles.loadMoreButton} onClick={loadMore}>
             Load more
           </Button>
         ) : (
           <span>Loading...</span>
         ))}
-      <div css={css({height: "2rem"})} />
+      <div css={css({ height: "2rem" })} />
       <Button
-        style={[styles.backToTopButton, showBackToTop ? styles.backToTopVisible : styles.backToTopInvisible]}
+        style={[
+          styles.backToTopButton,
+          showBackToTop ? styles.backToTopVisible : styles.backToTopInvisible,
+        ]}
         onClick={scrollToTop}
       >
         Top
       </Button>
-    </Container>
+    </ListSkeletonContainer>
   );
 };
 
@@ -152,7 +160,8 @@ const styles = {
     background: "white",
     color: "black",
     border: "1px solid rgba(99, 99, 99, 0.2)",
-    boxShadow: "rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px",
+    boxShadow:
+      "rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px",
   }),
   backToTopVisible: css({
     visibility: "initial",
@@ -161,7 +170,7 @@ const styles = {
   backToTopInvisible: css({
     visibility: "hidden",
     opacity: 0,
-  })
+  }),
 };
 
 export default PokemonList;
