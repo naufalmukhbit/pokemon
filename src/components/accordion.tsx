@@ -15,8 +15,8 @@ const Accordion = ({ title, children }: AccordionProps) => {
   };
 
   return (
-    <div css={styles.accordionContainer} className="accordion-container" onClick={toggle}>
-      <div css={styles.accordionTitle}>
+    <div css={styles.accordionContainer} className="accordion-container">
+      <div css={styles.accordionTitle} onClick={toggle}>
         <strong>{title}</strong>
         <svg
           css={open && styles.accordionIconExpanded}
@@ -48,20 +48,24 @@ const Accordion = ({ title, children }: AccordionProps) => {
 
 const styles = {
   accordionContainer: css({
-    padding: "1rem",
-    cursor: "pointer",
+    // padding: "1rem",
+    // cursor: "pointer",
   }),
   accordionTitle: css({
+    padding: "1rem",
+    cursor: "pointer",
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
   }),
   accordionContentCollapsed: css({
+    padding: "0 1rem",
     maxHeight: 0,
     transition: "max-height 0.5s cubic-bezier(0, 1, 0, 1)",
     overflow: "hidden",
   }),
   accordionContentExpanded: css({
+    padding: "0 1rem",
     maxHeight: 9999,
     transition: "max-height 1s ease-in-out",
     overflow: "hidden",

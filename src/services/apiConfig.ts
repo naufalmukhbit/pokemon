@@ -1,6 +1,11 @@
-const BASE_URL = "https://pokeapi.co/api/v2/";
-const BASE_URL_POKEMON = "https://pokeapi.co/api/v2/pokemon/";
+import { ApolloClient, InMemoryCache } from "@apollo/client";
+
 const BASE_URL_SPRITES =
   "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/";
 
-export { BASE_URL, BASE_URL_POKEMON, BASE_URL_SPRITES };
+const client = new ApolloClient({
+  uri: "https://graphql-pokeapi.graphcdn.app",
+  cache: new InMemoryCache(),
+});
+
+export { BASE_URL_SPRITES, client };

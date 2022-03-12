@@ -14,7 +14,6 @@ function App() {
   const { pathname } = useLocation();
 
   const fallback = (path: string) => {
-    console.log(path)
     switch (path) {
       case "/":
         return <CardListSkeleton />;

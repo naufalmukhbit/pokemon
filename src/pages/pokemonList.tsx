@@ -1,13 +1,14 @@
 /** @jsxImportSource @emotion/react */
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { css } from "@emotion/react";
 
 import { PokemonListCard } from "../components/card";
 import { ListSkeletonContainer } from "../components/container";
 import { Button } from "../components/button";
-import { BASE_URL_POKEMON, BASE_URL_SPRITES } from "../services/apiConfig";
-import { GET } from "../services/restAPI";
+import { BASE_URL_SPRITES } from "../services/apiConfig";
 import { Loading } from "../components/loading";
+import { useQuery } from "@apollo/client";
+import { GET_POKEMON } from "../services/queries";
 
 interface PokemonData {
   name: string;
@@ -17,14 +18,19 @@ interface PokemonData {
 
 const PokemonList = () => {
   document.title = "Pokémon List";
-  const ownedPokemons = localStorage.getItem("my-owned");
-  const owned = ownedPokemons ? JSON.parse(ownedPokemons) : {};
-
-  const [loading, setLoading] = useState(true);
-  const [loadingMore, setLoadingMore] = useState(false);
+  
+  const [pageLoading, setPageLoading] = useState(true);
   const [pokemonData, setPokemonData] = useState<PokemonData[]>([]);
   const [nextPokemonList, setNextPokemonList] = useState<string | null>("");
   const [showBackToTop, setShowBackToTop] = useState(false);
+  const [apiVariable, setApiVariable] = useState({
+    limit: 20,
+    offset: 0,
+  });
+
+  const { loading, data } = useQuery(GET_POKEMON, {
+    variables: apiVariable,
+  });
 
   useEffect(() => {
     const handleScroll = () => {
@@ -35,35 +41,38 @@ const PokemonList = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const mapResToState = (item: { name: string; url: string }) => ({
-    name: item.name,
-    sprite: BASE_URL_SPRITES + `${item.url.match(/(?<=\/pokemon\/)\d+/g)}.png`,
-    owned: owned[item.name] ?? 0,
-  });
+  const mapResToState = useCallback(((item: { name: string; url: string }) => {
+    const ownedPokemons = localStorage.getItem("my-owned");
+    const owned = ownedPokemons ? JSON.parse(ownedPokemons) : {};
+
+    return {
+      name: item.name,
+      sprite: BASE_URL_SPRITES + `${item.url.match(/(?<=\/pokemon\/)\d+/g)}.png`,
+      owned: owned[item.name] ?? 0,
+    }
+  }), []);
 
   useEffect(() => {
-    setLoading(true);
-    GET(BASE_URL_POKEMON, { limit: 36 }).then((res) => {
-      if (res) {
-        setNextPokemonList(res.res.next);
-        setPokemonData(res.res.results.map(mapResToState));
-      }
-      setLoading(false);
-    });
-  }, []);
+    if (!loading && data?.pokemons) {
+      setPokemonData((cur) => [
+        ...cur,
+        ...data.pokemons.results.map(mapResToState)
+      ]);
+      setNextPokemonList(data.pokemons.next);
+      setPageLoading(false);
+    }
+  }, [loading, data, mapResToState]);
 
   const loadMore = () => {
-    setLoadingMore(true);
-    GET(nextPokemonList!, {}).then((res) => {
-      if (res) {
-        setNextPokemonList(res.res.next);
-        setPokemonData((cur: PokemonData[]) => [
-          ...cur,
-          ...res.res.results.map(mapResToState),
-        ]);
+    if (data?.pokemons) {
+      if (nextPokemonList) {
+        let nextOffset = nextPokemonList && nextPokemonList.match(/(?<=offset=)\d+/g)
+        setApiVariable({
+          limit: 20,
+          offset: parseInt(nextOffset ? nextOffset[0] : "0"),
+        });
       }
-      setLoadingMore(false);
-    });
+    }
   };
 
   const renderCard = (data: PokemonData, index: number) => (
@@ -82,7 +91,7 @@ const PokemonList = () => {
   };
 
   return (
-    <ListSkeletonContainer loading={loading}>
+    <ListSkeletonContainer loading={pageLoading}>
       <h1 css={styles.title}>Pokémon List</h1>
       <div css={styles.list}>
         {pokemonData.map((data: PokemonData, index: number) =>
@@ -91,7 +100,7 @@ const PokemonList = () => {
       </div>
       {nextPokemonList &&
         nextPokemonList !== null &&
-        (!loadingMore ? (
+        (!loading ? (
           <Button style={styles.loadMoreButton} onClick={loadMore}>
             Load more
           </Button>

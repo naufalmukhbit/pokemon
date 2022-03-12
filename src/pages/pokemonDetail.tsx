@@ -1,15 +1,14 @@
 /** @jsxImportSource @emotion/react */
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { GET } from "../services/restAPI";
 import { capitalize } from "../utils/capitalize";
 import { css } from "@emotion/react";
-import Container, { DetailSkeletonContainer } from "../components/container";
+import { DetailSkeletonContainer } from "../components/container";
 import CapturePokemon from "../components/capture";
-import { BASE_URL_POKEMON } from "../services/apiConfig";
-import { DetailSkeleton } from "../components/skeleton";
 import Accordion from "../components/accordion";
 import screen from "../utils/breakpoints";
+import { useQuery } from "@apollo/client";
+import { GET_POKEMON_DETAIL } from "../services/queries";
 
 const PokemonDetail = () => {
   type pokemonType = {
@@ -33,7 +32,11 @@ const PokemonDetail = () => {
   };
   const params = useParams();
   const [pokemonData, setPokemonData] = useState<pokemonType>();
-  const [loading, setLoading] = useState(false);
+  const {loading, data} = useQuery(GET_POKEMON_DETAIL, {
+    variables: {
+      name: params.pokemonName
+    }
+  })
 
   useEffect(() => {
     document.title = `${capitalize(pokemonData?.name ?? params.pokemonName ?? "")} - Pokémon`
@@ -60,26 +63,23 @@ const PokemonDetail = () => {
   };
 
   useEffect(() => {
-    setLoading(true);
-    GET(BASE_URL_POKEMON + params.pokemonName, {}).then((res) => {
-      res &&
-        setPokemonData({
-          name: res.res.name,
-          stats: getStat(res.res.stats),
-          baseXP: res.res.base_experience,
-          weight: res.res.weight / 10,
-          height: res.res.height * 10,
-          image: res.res.sprites.front_default,
-          ability: res.res.abilities.map(
-            (ability: any) => ability.ability.name
-          ),
-          heldItems: res.res.held_items.map((item: any) => item.item.name),
-          moves: res.res.moves.map((move: any) => move.move.name),
-          types: res.res.types.map((type: any) => type.type.name),
-        });
-      setLoading(false);
-    });
-  }, [params]);
+    if (!loading && data?.pokemon) {
+      setPokemonData({
+        name: data.pokemon.name,
+        stats: getStat(data.pokemon.stats),
+        baseXP: data.pokemon.base_experience,
+        weight: data.pokemon.weight / 10,
+        height: data.pokemon.height * 10,
+        image: data.pokemon.sprites.front_default,
+        ability: data.pokemon.abilities.map(
+          (ability: any) => ability.ability.name
+        ),
+        heldItems: data.pokemon.held_items.map((item: any) => item.item.name),
+        moves: data.pokemon.moves.map((move: any) => move.move.name),
+        types: data.pokemon.types.map((type: any) => type.type.name),
+      });
+    }
+  }, [loading, data]);
 
   const renderSection = (title: string, data: string[]) => (
     <Accordion title={title}>
@@ -219,7 +219,7 @@ const styles = {
     },
   }),
   pokemonInfoList: css({
-    marginTop: "1rem",
+    marginBottom: "1rem",
     display: "flex",
     flexWrap: "wrap",
     flexDirection: "row",

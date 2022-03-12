@@ -1,6 +1,5 @@
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
-import { ReactNode } from "react";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import screen from "../utils/breakpoints";
 import Container from "./container";
