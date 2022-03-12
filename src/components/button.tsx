@@ -57,6 +57,7 @@ const styles = {
     color: "white",
     textShadow: "0px 2px 10px rgba(0,0,0,0.2)",
     fontSize: 20,
+    cursor: "pointer",
   }),
 };
 
