@@ -12,6 +12,7 @@ interface PokemonData {
 }
 
 const MyPokemon = () => {
+  document.title = "My Pokémon";
   const [pokemonData, setPokemonData] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -46,6 +47,7 @@ const MyPokemon = () => {
 
 const styles = {
   title: css({
+    fontWeight: 500,
     [screen[1]]: {
       padding: "1rem 0",
     },

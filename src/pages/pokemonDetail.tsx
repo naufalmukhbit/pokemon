@@ -35,6 +35,10 @@ const PokemonDetail = () => {
   const [pokemonData, setPokemonData] = useState<pokemonType>();
   const [loading, setLoading] = useState(false);
 
+  useEffect(() => {
+    document.title = `${capitalize(pokemonData?.name ?? params.pokemonName ?? "")} - Pokémon`
+  })
+
   const getStat = (stat: any[]) => {
     return {
       hp: stat.find((item) => item.stat.name === "hp")?.base_stat ?? undefined,
@@ -99,7 +103,7 @@ const PokemonDetail = () => {
           <div css={styles.container}>
             <div css={styles.pokemonCardContainer}>
               <div>
-                <h1>{capitalize(pokemonData.name)}</h1>
+                <h1 css={styles.title}>{capitalize(pokemonData.name)}</h1>
                 <img
                   src={pokemonData.image}
                   width={200}
@@ -179,6 +183,9 @@ const styles = {
     maxWidth: 768,
     marginLeft: "auto",
     marginRight: "auto",
+  }),
+  title: css({
+    fontWeight: 500,
   }),
   pokemonCardContainer: css({
     border: "1px solid #a0a0a0",

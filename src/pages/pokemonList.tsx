@@ -15,6 +15,7 @@ interface PokemonData {
 }
 
 const PokemonList = () => {
+  document.title = "Pokémon List";
   const ownedPokemons = localStorage.getItem("my-owned");
   const owned = ownedPokemons ? JSON.parse(ownedPokemons) : {};
 
@@ -128,6 +129,7 @@ const mq = breakpoints.map((width) => `@media (min-width: ${width}px)`);
 const styles = {
   title: css({
     marginBottom: 30,
+    fontWeight: 500,
     [mq[1]]: {
       padding: "1rem 0",
     },

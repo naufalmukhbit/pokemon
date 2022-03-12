@@ -28,7 +28,7 @@ const PokemonListCard = ({ data }: PokemonListCardProps) => (
       <span>{capitalize(data.name)}</span>
     </div>
     <div css={[styles.dataContainer, styles.ownedData]}>
-      <strong>OWNED</strong>
+      <strong css={css({fontWeight: 600})}>OWNED</strong>
       <span>{data.owned}</span>
     </div>
   </Link>

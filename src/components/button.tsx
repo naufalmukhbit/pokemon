@@ -48,6 +48,7 @@ const ThemedButton = ({ types, children, style, onClick }: ThemedButtonProps) =>
 
 const styles = {
   buttonStyle: css({
+    fontFamily: "'Work Sans', sans-serif",
     background: "black",
     height: "3rem",
     width: "100%",
