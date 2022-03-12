@@ -14,15 +14,13 @@ const CardListSkeleton = () => {
         </SkeletonTheme>
       </div>
       <div css={styles.cardList}>
-        {Array(12).fill(
-          <div css={styles.cardSkeleton}>
+        {Array.from(Array(12).keys()).map((x, i) => (
+          <div css={styles.cardSkeleton} key={i}>
             <SkeletonTheme width="100%" height={184} borderRadius={15}>
               <Skeleton />
             </SkeletonTheme>
-          </div>,
-          0,
-          12
-        )}
+          </div>
+        ))}
       </div>
     </Container>
   );
@@ -37,13 +35,13 @@ const DetailSkeleton = () => {
         </SkeletonTheme>
       </div>
       <SkeletonTheme width={180} height={180}>
-        <Skeleton style={{marginBottom: 40, marginTop: 20}} />
+        <Skeleton style={{ marginBottom: 40, marginTop: 20 }} />
       </SkeletonTheme>
       <SkeletonTheme height="2rem">
-        <Skeleton count={6} style={{marginTop: "10px"}} />
+        <Skeleton count={6} style={{ marginTop: "10px" }} />
       </SkeletonTheme>
     </Container>
-  )
+  );
 };
 
 const styles = {

@@ -5,12 +5,10 @@ import { Route, Routes, useLocation } from "react-router-dom";
 import Header from "./components/header";
 import { CardListSkeleton, DetailSkeleton } from "./components/skeleton";
 
-import "./App.css";
-
 const PokemonList = lazy(() => import("./pages/pokemonList"));
 const PokemonDetail = lazy(() => import("./pages/pokemonDetail"));
 const MyPokemon = lazy(() => import("./pages/myPokemon"));
-const PageNotFound =  lazy(() => import("./pages/notFound"));
+const PageNotFound = lazy(() => import("./pages/notFound"));
 
 function App() {
   const { pathname } = useLocation();
@@ -25,7 +23,7 @@ function App() {
   };
 
   return (
-    <div className="App">
+    <div style={{ textAlign: "center" }}>
       <Header />
       <Suspense fallback={fallback(pathname)}>
         <Routes>

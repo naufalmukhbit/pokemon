@@ -2,6 +2,7 @@
 import { css, SerializedStyles } from "@emotion/react";
 import { ReactNode } from "react";
 import { availableTypeColors } from "../constants/typeColors";
+import screen from "../utils/breakpoints";
 
 interface ButtonProps {
   children: ReactNode;
@@ -20,10 +21,11 @@ const Button = ({ children, style, onClick }: ButtonProps) => {
 interface ThemedButtonProps {
   types: string[];
   children: ReactNode;
+  style?: SerializedStyles | SerializedStyles[];
   onClick?: () => void;
 }
 
-const ThemedButton = ({ types, children, onClick }: ThemedButtonProps) => {
+const ThemedButton = ({ types, children, style, onClick }: ThemedButtonProps) => {
   type typeNames = keyof typeof availableTypeColors;
   const availableTypes = [...Object.keys(availableTypeColors)] as const;
   type typeOfAvailableTypes = typeof availableTypes[number];
@@ -38,7 +40,7 @@ const ThemedButton = ({ types, children, onClick }: ThemedButtonProps) => {
       : availableTypeColors.unknown;
 
   return (
-    <Button onClick={onClick} style={css({ background: color })}>
+    <Button onClick={onClick} style={css({ background: color, [screen[1]]: {maxWidth: 300} })}>
       {children}
     </Button>
   );

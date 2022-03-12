@@ -1,10 +1,12 @@
 /** @jsxImportSource @emotion/react */
-import { css } from "@emotion/react";
+import { css, keyframes } from "@emotion/react";
 import { useEffect, useState } from "react";
-import {ThemedButton} from "./button";
+import { Button, ThemedButton } from "./button";
 import { oddEvenRandomizer, randomNumber } from "../utils/randomizer";
 import { savePokemon } from "../utils/myPokemon";
 import Modal from "./modal";
+import screen from "../utils/breakpoints";
+import { capitalize } from "../utils/capitalize";
 
 interface CaptureType {
   pokemon: {
@@ -21,6 +23,8 @@ const CapturePokemon = ({ pokemon }: CaptureType) => {
   const [capturing, setCapturing] = useState(false);
   const [captureStatus, setCaptureStatus] = useState<captureType>("idle");
   const [nickname, setNickname] = useState("");
+  const [inputError, setInputError] = useState<string | undefined>();
+  const [retyped, setRetyped] = useState(false);
 
   useEffect(() => {
     if (capturing) {
@@ -31,6 +35,11 @@ const CapturePokemon = ({ pokemon }: CaptureType) => {
       }, 3500);
     }
   }, [capturing]);
+
+  const alertInput = (alert: string) => {
+    setInputError(alert);
+    setRetyped(false);
+  }
 
   const onCapture = (status: boolean) => {
     if (status) {
@@ -44,10 +53,10 @@ const CapturePokemon = ({ pokemon }: CaptureType) => {
             setCaptureStatus("idle");
             setCapturing(false);
           } else {
-            alert("Nickname already exists!");
+            alertInput("Nickname already exists!");
           }
         } else {
-          alert("Give your pokemon a nickname!");
+          alertInput("Nickname must be filled!");
         }
       } else {
         setCaptureStatus("idle");
@@ -58,49 +67,109 @@ const CapturePokemon = ({ pokemon }: CaptureType) => {
 
   return (
     <>
-      <div
-        css={css({
-          position: "sticky",
-          bottom: 0,
-          width: "100%",
-          background: "white",
-        })}
-      >
-        <div
-          css={css({
-            padding: "1rem",
-          })}
-        >
+      <div css={styles.captureBar}>
+        <div css={styles.captureButtonContainer}>
           <ThemedButton types={pokemon.types} onClick={() => onCapture(true)}>
-            CAPTURE
+            CATCH
           </ThemedButton>
         </div>
       </div>
       <Modal visible={capturing}>
         <img
-          css={css({ height: 100, width: 100 })}
+          css={[
+            styles.image,
+            captureStatus === "failed" && styles.failedImage,
+            captureStatus === "capturing" && styles.loadingImage,
+          ]}
           src={pokemon.image}
           alt="pokemon-default-front"
         />
-        {captureStatus === "success"
-          ? "Pokemon Captured!"
-          : captureStatus === "failed"
-          ? "Failed to catch Pokemon! :("
-          : "Capturing..."}
+        {captureStatus === "success" ? (
+          <span css={styles.successStatus}>
+            {`${capitalize(pokemon.name)} catched!`}
+          </span>
+        ) : captureStatus === "failed" ? (
+          <span css={styles.failedStatus}>
+            {`Failed to catch ${capitalize(pokemon.name)}...`}
+          </span>
+        ) : (
+          `Catching ${capitalize(pokemon.name)}...`
+        )}
         {captureStatus === "success" && (
-          <input
-            placeholder="Pokemon nickname..."
-            onChange={(e) => setNickname(e.target.value)}
-          />
+          <div css={css({width: "100%", textAlign: "left"})}>
+            <input
+              placeholder="Give your Pokemon a nickname..."
+              onChange={(e) => {
+                setNickname(e.target.value);
+                setRetyped(true);
+              }}
+              css={[styles.nicknameInput, inputError && !retyped && styles.nicknameInputFail]}
+            />
+            {inputError && !retyped && <small css={css({
+              color: "red"
+            })}>{inputError}</small>}
+          </div>
         )}
         {(captureStatus === "success" || captureStatus === "failed") && (
-          <ThemedButton types={pokemon.types} onClick={() => onCapture(false)}>
+          <Button onClick={() => onCapture(false)} style={styles.closeModal}>
             CLOSE
-          </ThemedButton>
+          </Button>
         )}
       </Modal>
     </>
   );
+};
+const blink = keyframes`
+    0% {opacity: 0}
+    100% {opacity: 1}
+  `;
+
+const styles = {
+  captureBar: css({
+    position: "fixed",
+    bottom: 0,
+    width: "100%",
+    background: "white",
+    boxShadow: "rgba(100, 100, 111, 0.2) 0 2px 8px 4px",
+  }),
+  captureButtonContainer: css({
+    padding: "1rem",
+    [screen[2]]: {
+      maxWidth: 768,
+      textAlign: "right",
+      margin: "auto",
+    },
+  }),
+  image: css({
+    height: 100,
+    width: 100,
+  }),
+  loadingImage: css({
+    animation: `${blink} 1s ease infinite`,
+  }),
+  failedImage: css({
+    filter: "grayscale(100%)",
+  }),
+  successStatus: css({
+    fontSize: 20,
+  }),
+  failedStatus: css({
+    fontSize: 18,
+  }),
+  nicknameInput: css({
+    width: "100%",
+    padding: "1rem 0.5rem",
+    border: "1px solid #a0a0a0",
+    borderRadius: 6,
+    height: "2rem",
+    boxSizing: "border-box",
+  }),
+  nicknameInputFail: css({
+    border: "1px solid red",
+  }),
+  closeModal: css({
+    fontSize: 14,
+  }),
 };
 
 export default CapturePokemon;

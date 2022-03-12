@@ -34,7 +34,7 @@ const ListSkeletonContainer = ({ children, loading }: SkeletonProps) => {
 };
 
 const DetailSkeletonContainer = ({ children, loading }: SkeletonProps) => {
-  return loading ? <DetailSkeleton /> : <Container>{children}</Container>;
+  return loading ? <DetailSkeleton /> : <div>{children}</div>;
 };
 
 export { ListSkeletonContainer, DetailSkeletonContainer };
