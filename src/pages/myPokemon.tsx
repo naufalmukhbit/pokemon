@@ -2,7 +2,8 @@
 import { css } from "@emotion/react";
 import { MyPokemonCard } from "../components/card";
 import { useEffect, useState } from "react";
-import Container, { ListSkeletonContainer } from "../components/container";
+import { ListSkeletonContainer } from "../components/container";
+import screen from "../utils/breakpoints";
 
 interface PokemonData {
   name: string;
@@ -11,8 +12,6 @@ interface PokemonData {
 }
 
 const MyPokemon = () => {
-  const breakpoints = [320, 576, 768, 992, 1200];
-  const mq = breakpoints.map((width) => `@media (min-width: ${width}px)`);
   const [pokemonData, setPokemonData] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -23,65 +22,59 @@ const MyPokemon = () => {
     setLoading(false);
   }, []);
 
-  const renderCard = (data: PokemonData, index: number) => {
-    const cardContainerStyle = css({
-      display: "flex",
-      flexDirection: "column",
-      width: "100%",
-      flexGrow: 0,
-      flexShrink: 0,
-      [mq[0]]: {
-        flexBasis: "50%",
-      },
-      [mq[1]]: {
-        flexBasis: "33.33%",
-      },
-      [mq[1]]: {
-        flexBasis: "25%",
-      },
-    });
-
-    return (
-      <div css={cardContainerStyle} key={data.name + index}>
-        <MyPokemonCard data={data} />
-      </div>
-    );
-  };
-
-  const listStyle = css({
-    display: "flex",
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "flex-start",
-  });
+  const renderCard = (data: PokemonData, index: number) => (
+    <div css={styles.cardContainer} key={data.name + index}>
+      <MyPokemonCard data={data} />
+    </div>
+  );
 
   return (
     <ListSkeletonContainer loading={loading}>
-      <h1
-        css={css({
-          [mq[1]]: {
-            padding: "1rem 0",
-          },
-        })}
-      >
-        My Pokémon
-      </h1>
-      <div css={listStyle}>
-        {pokemonData.length > 0
-          ? pokemonData.map((data: PokemonData, index: number) =>
-              renderCard(data, index)
-            )
-          : (
-            <span css={css({
-              width: "100%",
-              textAlign: "center",
-            })}>
-              You don't have any pokemon!
-            </span>
-          )}
+      <h1 css={styles.title}>My Pokémon</h1>
+      <div css={styles.list}>
+        {pokemonData.length > 0 ? (
+          pokemonData.map((data: PokemonData, index: number) =>
+            renderCard(data, index)
+          )
+        ) : (
+          <span css={styles.noPokemon}>You don't have any pokemon!</span>
+        )}
       </div>
     </ListSkeletonContainer>
   );
+};
+
+const styles = {
+  title: css({
+    [screen[1]]: {
+      padding: "1rem 0",
+    },
+  }),
+  list: css({
+    display: "flex",
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-between",
+  }),
+  noPokemon: css({
+    width: "100%",
+    textAlign: "center",
+  }),
+  cardContainer: css({
+    display: "flex",
+    flexDirection: "column",
+    width: "100%",
+    marginBottom: 16,
+    [screen[0]]: {
+      flex: "0 0 48%",
+    },
+    [screen[1]]: {
+      flex: "0 0 32%",
+    },
+    [screen[2]]: {
+      flex: "0 0 23.5%",
+    },
+  }),
 };
 
 export default MyPokemon;

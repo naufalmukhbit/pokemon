@@ -28,7 +28,7 @@ const PokemonListCard = ({ data }: PokemonListCardProps) => (
       <span>{capitalize(data.name)}</span>
     </div>
     <div css={[styles.dataContainer, styles.ownedData]}>
-      <span>OWNED</span>
+      <strong>OWNED</strong>
       <span>{data.owned}</span>
     </div>
   </Link>
@@ -55,7 +55,16 @@ const MyPokemonCard = ({ data }: MyPokemonCardProps) => {
         css={styles.removeButton}
         onClick={() => setDeleteConfirmation(true)}
       >
-        x
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          fill="currentColor"
+          className="bi bi-x"
+          viewBox="0 0 16 16"
+        >
+          <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+        </svg>
       </button>
       <div css={styles.pokemonInfoContainer}>
         <img
@@ -65,22 +74,28 @@ const MyPokemonCard = ({ data }: MyPokemonCardProps) => {
           width={100}
           height={100}
         />
-        <span>{capitalize(data.name)}</span>
+        <span css={css({ fontWeight: "bold" })}>{data.nickname}</span>
       </div>
       <div css={[styles.dataContainer, styles.nicknameData]}>
-        {data.nickname}
+        {capitalize(data.name)}
       </div>
       <Modal visible={deleteConfirmation}>
-        Are you sure you want to release this Pokemon?
-        <Button style={css({ background: "green" })} onClick={onDelete}>
-          YES
-        </Button>
-        <Button
-          style={css({ background: "red" })}
-          onClick={() => setDeleteConfirmation(false)}
-        >
-          NO
-        </Button>
+        Are you sure you want to release this Pokemon? You can't undo this
+        action.
+        <div css={css({ width: "100%" })}>
+          <Button
+            style={css({ background: "green", fontSize: 16, marginBottom: 10 })}
+            onClick={onDelete}
+          >
+            YES
+          </Button>
+          <Button
+            style={css({ background: "red", fontSize: 16 })}
+            onClick={() => setDeleteConfirmation(false)}
+          >
+            NO
+          </Button>
+        </div>
       </Modal>
     </div>
   );
@@ -123,8 +138,16 @@ const styles = {
   }),
   removeButton: css({
     position: "absolute",
-    top: 15,
-    right: 15,
+    top: 10,
+    right: 10,
+    height: 28,
+    width: 28,
+    padding: 0,
+    borderRadius: 999,
+    border: "1px solid #d0d0d0",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center"
   }),
 };
 
