@@ -7,6 +7,7 @@ import { ListSkeletonContainer } from "../components/container";
 import { Button } from "../components/button";
 import { BASE_URL_POKEMON, BASE_URL_SPRITES } from "../services/apiConfig";
 import { GET } from "../services/restAPI";
+import { Loading } from "../components/loading";
 
 interface PokemonData {
   name: string;
@@ -95,7 +96,10 @@ const PokemonList = () => {
             Load more
           </Button>
         ) : (
-          <span>Loading...</span>
+          <span css={styles.loadingSpinner}>
+            <Loading />
+            Loading...
+          </span>
         ))}
       <div css={css({ height: "2rem" })} />
       <Button
@@ -163,6 +167,13 @@ const styles = {
     fontSize: 14,
     height: "2.6rem",
     border: "1px solid rgba(99, 99, 99, 0.2)",
+  }),
+  loadingSpinner: css({
+    padding: "0.5rem",
+    display: "flex",
+    gap: 10,
+    alignItems: "center",
+    justifyContent: "center",
   }),
   backToTopButton: css({
     position: "sticky",
