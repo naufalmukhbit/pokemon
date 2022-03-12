@@ -28,7 +28,7 @@ const PokemonListCard = ({ data }: PokemonListCardProps) => (
       <span>{capitalize(data.name)}</span>
     </div>
     <div css={[styles.dataContainer, styles.ownedData]}>
-      <strong css={css({fontWeight: 600})}>OWNED</strong>
+      <strong css={css({ fontWeight: 600 })}>OWNED</strong>
       <span>{data.owned}</span>
     </div>
   </Link>
@@ -83,16 +83,10 @@ const MyPokemonCard = ({ data }: MyPokemonCardProps) => {
         Are you sure you want to release this Pokemon? You can't undo this
         action.
         <div css={css({ width: "100%" })}>
-          <Button
-            style={css({ background: "green", fontSize: 16, marginBottom: 10 })}
-            onClick={onDelete}
-          >
+          <Button style={styles.yesButton} onClick={onDelete}>
             YES
           </Button>
-          <Button
-            style={css({ background: "red", fontSize: 16 })}
-            onClick={() => setDeleteConfirmation(false)}
-          >
+          <Button style={styles.noButton} onClick={() => setDeleteConfirmation(false)}>
             NO
           </Button>
         </div>
@@ -125,7 +119,8 @@ const styles = {
   }),
   dataContainer: css({
     background: "rgba(99, 99, 99, 0.2)",
-    borderRadius: "0 0 15px 15px",
+    borderRadius: "0 0 14px 14px",
+    border: "1px solid gba(99, 99, 99, 0.2)",
     padding: "0.5rem 1rem",
     display: "flex",
     flexDirection: "row",
@@ -147,7 +142,17 @@ const styles = {
     border: "1px solid #d0d0d0",
     display: "flex",
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
+  }),
+  yesButton: css({
+    fontSize: 16,
+    marginBottom: 10,
+  }),
+  noButton: css({
+    background: "white",
+    color: "black",
+    fontSize: 16,
+    border: "1px solid black",
   }),
 };
 

@@ -62,7 +62,7 @@ const styles = {
     overflow: "hidden",
   }),
   accordionContentExpanded: css({
-    maxHeight: 1000,
+    maxHeight: 9999,
     transition: "max-height 1s ease-in-out",
     overflow: "hidden",
   }),

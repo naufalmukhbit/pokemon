@@ -112,7 +112,7 @@ const CapturePokemon = ({ pokemon }: CaptureType) => {
         )}
         {(captureStatus === "success" || captureStatus === "failed") && (
           <Button onClick={() => onCapture(false)} style={styles.closeModal}>
-            CLOSE
+            {captureStatus === "success" ? "SAVE" : "CLOSE"}
           </Button>
         )}
       </Modal>

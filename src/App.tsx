@@ -14,8 +14,11 @@ function App() {
   const { pathname } = useLocation();
 
   const fallback = (path: string) => {
+    console.log(path)
     switch (path) {
-      case "/" || "/my-pokemon":
+      case "/":
+        return <CardListSkeleton />;
+      case "/my-pokemon":
         return <CardListSkeleton />;
       default:
         return <DetailSkeleton />;
