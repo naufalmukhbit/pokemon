@@ -26,7 +26,7 @@ const CapturePokemon = ({ pokemon }: CaptureType) => {
   const [inputError, setInputError] = useState<string | undefined>();
   const [retyped, setRetyped] = useState(false);
 
-  const image = require(`../assets/dream-world/${pokemon.id}.svg`)
+  const image = `https://github.com/PokeAPI/sprites/tree/master/sprites/pokemon/other/dream-world/${pokemon.id}.svg`
 
   useEffect(() => {
     if (capturing) {
