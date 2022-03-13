@@ -1,14 +1,16 @@
 /** @jsxImportSource @emotion/react */
-import { useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { capitalize } from "../utils/capitalize";
 import { css } from "@emotion/react";
 import { DetailSkeletonContainer } from "../components/container";
-import CapturePokemon from "../components/capture";
-import Accordion from "../components/accordion";
 import screen from "../utils/breakpoints";
 import { useQuery } from "@apollo/client";
 import { GET_POKEMON_DETAIL } from "../services/queries";
+import { AccordionSkeleton, CaptureBarSkeleton } from "../components/skeleton";
+
+const Accordion = lazy(() => import("../components/accordion"));
+const CapturePokemon = lazy(() => import("../components/capture"));
 
 const PokemonDetail = () => {
   type pokemonType = {
@@ -91,18 +93,20 @@ const PokemonDetail = () => {
   }, [loading, data]);
 
   const renderSection = (title: string, data: string[]) => (
-    <Accordion title={title}>
-      <div css={styles.pokemonInfoList}>
-        {data.map((item, index) => (
-          <span css={styles.pokemonInfoName} key={item + index}>
-            {item}
-          </span>
-        ))}
-        {(!data || data.length === 0) && (
-          <span css={css({ color: "lightgray" })}>No data</span>
-        )}
-      </div>
-    </Accordion>
+    <Suspense fallback={<AccordionSkeleton />}>
+      <Accordion title={title}>
+        <div css={styles.pokemonInfoList}>
+          {data.map((item, index) => (
+            <span css={styles.pokemonInfoName} key={item + index}>
+              {item}
+            </span>
+          ))}
+          {(!data || data.length === 0) && (
+            <span css={css({ color: "lightgray" })}>No data</span>
+          )}
+        </div>
+      </Accordion>
+    </Suspense>
   );
 
   return (
@@ -118,7 +122,6 @@ const PokemonDetail = () => {
                   width={200}
                   height={200}
                   alt="pokemon-default-front"
-                  loading="lazy"
                 />
                 <div css={styles.pokemonStatRow}>
                   <div css={styles.pokemonStatCell}>
@@ -181,7 +184,11 @@ const PokemonDetail = () => {
           <h1>Pokemon Not Found!</h1>
         )}
       </DetailSkeletonContainer>
-      {!loading && pokemonData && <CapturePokemon pokemon={pokemonData} />}
+      {!loading && pokemonData && (
+        <Suspense fallback={<CaptureBarSkeleton />}>
+          <CapturePokemon pokemon={pokemonData} />
+        </Suspense>
+      )}
     </div>
   );
 };

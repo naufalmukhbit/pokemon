@@ -43,6 +43,20 @@ const DetailSkeleton = () => {
   );
 };
 
+const AccordionSkeleton = () => (
+  <SkeletonTheme width="100%" height="3rem">
+    <Skeleton />
+  </SkeletonTheme>
+);
+
+const CaptureBarSkeleton = () => (
+  <div css={styles.captureBar}>
+    <SkeletonTheme width="100%" height="5rem">
+      <Skeleton />
+    </SkeletonTheme>
+  </div>
+);
+
 const styles = {
   titleSkeleton: css({
     margin: "auto",
@@ -69,6 +83,10 @@ const styles = {
       flex: "0 0 23.5%",
     },
   }),
+  captureBar: css({
+    position: "fixed",
+    bottom: 0,
+  }),
 };
 
-export { CardListSkeleton, DetailSkeleton };
+export { CardListSkeleton, DetailSkeleton, AccordionSkeleton, CaptureBarSkeleton };

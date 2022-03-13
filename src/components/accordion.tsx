@@ -15,7 +15,7 @@ const Accordion = ({ title, children }: AccordionProps) => {
   };
 
   return (
-    <div css={styles.accordionContainer} className="accordion-container">
+    <div className="accordion-container">
       <div css={styles.accordionTitle} onClick={toggle}>
         <strong>{title}</strong>
         <svg
@@ -47,10 +47,6 @@ const Accordion = ({ title, children }: AccordionProps) => {
 };
 
 const styles = {
-  accordionContainer: css({
-    // padding: "1rem",
-    // cursor: "pointer",
-  }),
   accordionTitle: css({
     padding: "1rem",
     cursor: "pointer",
