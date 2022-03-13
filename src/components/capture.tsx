@@ -10,8 +10,8 @@ import { capitalize } from "../utils/capitalize";
 
 interface CaptureType {
   pokemon: {
+    id: number;
     name: string;
-    image: string;
     moves: string[];
     types: string[];
   };
@@ -25,6 +25,8 @@ const CapturePokemon = ({ pokemon }: CaptureType) => {
   const [nickname, setNickname] = useState("");
   const [inputError, setInputError] = useState<string | undefined>();
   const [retyped, setRetyped] = useState(false);
+
+  const image = require(`../assets/dream-world/${pokemon.id}.svg`)
 
   useEffect(() => {
     if (capturing) {
@@ -81,7 +83,7 @@ const CapturePokemon = ({ pokemon }: CaptureType) => {
             captureStatus === "failed" && styles.failedImage,
             captureStatus === "capturing" && styles.loadingImage,
           ]}
-          src={pokemon.image}
+          src={image}
           alt="pokemon-default-front"
         />
         {captureStatus === "success" ? (

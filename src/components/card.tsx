@@ -9,41 +9,45 @@ import Modal from "./modal";
 
 interface PokemonListCardProps {
   data: {
+    id: number;
     name: string;
-    sprite: string;
     owned: number;
   };
 }
 
-const PokemonListCard = ({ data }: PokemonListCardProps) => (
-  <Link to={`/pokemon/${data.name}`} css={styles.cardContainer}>
-    <div css={styles.pokemonInfoContainer}>
-      <img
-        css={styles.pokemonImage}
-        src={data.sprite}
-        alt="pokemon-default-front"
-        width={100}
-        height={100}
-      />
-      <span>{capitalize(data.name)}</span>
-    </div>
-    <div css={[styles.dataContainer, styles.ownedData]}>
-      <strong css={css({ fontWeight: 600 })}>OWNED</strong>
-      <span>{data.owned}</span>
-    </div>
-  </Link>
-);
+const PokemonListCard = ({ data }: PokemonListCardProps) => {
+  const image = require(`../assets/dream-world/${data.id}.svg`);
+  return (
+    <Link to={`/pokemon/${data.name}`} css={styles.cardContainer}>
+      <div css={styles.pokemonInfoContainer}>
+        <img
+          css={styles.pokemonImage}
+          src={image}
+          alt="pokemon-default-front"
+          width={100}
+          height={100}
+        />
+        <span>{capitalize(data.name)}</span>
+      </div>
+      <div css={[styles.dataContainer, styles.ownedData]}>
+        <strong css={css({ fontWeight: 600 })}>OWNED</strong>
+        <span>{data.owned}</span>
+      </div>
+    </Link>
+  )
+};
 
 interface MyPokemonCardProps {
   data: {
+    pokemonId: number;
     name: string;
-    imageURL: string;
     nickname: string;
   };
 }
 
 const MyPokemonCard = ({ data }: MyPokemonCardProps) => {
   const [deleteConfirmation, setDeleteConfirmation] = useState(false);
+  const image = require(`../assets/dream-world/${data.pokemonId}.svg`);
   const onDelete = () => {
     releasePokemon(data.nickname);
     window.location?.reload();
@@ -69,7 +73,7 @@ const MyPokemonCard = ({ data }: MyPokemonCardProps) => {
       <div css={styles.pokemonInfoContainer}>
         <img
           css={styles.pokemonImage}
-          src={data.imageURL}
+          src={image}
           alt="pokemon-default-front"
           width={100}
           height={100}
@@ -116,6 +120,7 @@ const styles = {
   pokemonImage: css({
     maxWidth: 100,
     maxHeight: 100,
+    padding: 20,
   }),
   dataContainer: css({
     background: "rgba(99, 99, 99, 0.2)",

@@ -5,14 +5,13 @@ import { css } from "@emotion/react";
 import { PokemonListCard } from "../components/card";
 import { ListSkeletonContainer } from "../components/container";
 import { Button } from "../components/button";
-import { BASE_URL_SPRITES } from "../services/apiConfig";
 import { Loading } from "../components/loading";
 import { useQuery } from "@apollo/client";
 import { GET_POKEMON } from "../services/queries";
 
 interface PokemonData {
+  id: number;
   name: string;
-  sprite: string;
   owned: number;
 }
 
@@ -41,13 +40,13 @@ const PokemonList = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const mapResToState = useCallback(((item: { name: string; url: string }) => {
+  const mapResToState = useCallback(((item: { id:number, name: string; url: string }) => {
     const ownedPokemons = localStorage.getItem("my-owned");
     const owned = ownedPokemons ? JSON.parse(ownedPokemons) : {};
 
     return {
+      id: item.id,
       name: item.name,
-      sprite: BASE_URL_SPRITES + `${item.url.match(/(?<=\/pokemon\/)\d+/g)}.png`,
       owned: owned[item.name] ?? 0,
     }
   }), []);
@@ -158,16 +157,14 @@ const styles = {
     flexDirection: "column",
     width: "100%",
     marginBottom: 16,
-    flexGrow: 0,
-    flexShrink: 0,
     [mq[0]]: {
-      flexBasis: "48%",
+      flex: "0 0 48%",
     },
     [mq[1]]: {
-      flexBasis: "32%",
+      flex: "0 0 32%",
     },
     [mq[2]]: {
-      flexBasis: "23.5%",
+      flex: "0 0 23.5%",
     },
   }),
   loadMoreButton: css({

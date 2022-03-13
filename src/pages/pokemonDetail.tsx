@@ -12,6 +12,7 @@ import { GET_POKEMON_DETAIL } from "../services/queries";
 
 const PokemonDetail = () => {
   type pokemonType = {
+    id: number;
     name: string;
     stats: {
       hp?: number;
@@ -21,7 +22,6 @@ const PokemonDetail = () => {
       spDefense?: number;
       speed?: number;
     };
-    image: string;
     baseXP: number;
     weight: number;
     height: number;
@@ -31,16 +31,25 @@ const PokemonDetail = () => {
     types: string[];
   };
   const params = useParams();
+  const [image, setImage] = useState<any>(require("../assets/unknown.png"));
   const [pokemonData, setPokemonData] = useState<pokemonType>();
-  const {loading, data} = useQuery(GET_POKEMON_DETAIL, {
+  const { loading, data } = useQuery(GET_POKEMON_DETAIL, {
     variables: {
-      name: params.pokemonName
-    }
-  })
+      name: params.pokemonName,
+    },
+  });
 
   useEffect(() => {
-    document.title = `${capitalize(pokemonData?.name ?? params.pokemonName ?? "")} - Pokémon`
-  })
+    document.title = `${capitalize(
+      pokemonData?.name ?? params.pokemonName ?? ""
+    )} - Pokémon`;
+  });
+
+  useEffect(() => {
+    data?.pokemon?.id &&
+      data.pokemon.id !== "" &&
+      setImage(require(`../assets/dream-world/${data.pokemon.id}.svg`));
+  }, [data]);
 
   const getStat = (stat: any[]) => {
     return {
@@ -65,12 +74,12 @@ const PokemonDetail = () => {
   useEffect(() => {
     if (!loading && data?.pokemon) {
       setPokemonData({
+        id: data.pokemon.id,
         name: data.pokemon.name,
         stats: getStat(data.pokemon.stats),
         baseXP: data.pokemon.base_experience,
         weight: data.pokemon.weight / 10,
         height: data.pokemon.height * 10,
-        image: data.pokemon.sprites.front_default,
         ability: data.pokemon.abilities.map(
           (ability: any) => ability.ability.name
         ),
@@ -105,7 +114,7 @@ const PokemonDetail = () => {
               <div>
                 <h1 css={styles.title}>{capitalize(pokemonData.name)}</h1>
                 <img
-                  src={pokemonData.image}
+                  src={image}
                   width={200}
                   height={200}
                   alt="pokemon-default-front"

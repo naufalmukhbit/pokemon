@@ -6,6 +6,7 @@ import { ListSkeletonContainer } from "../components/container";
 import screen from "../utils/breakpoints";
 
 interface PokemonData {
+  pokemonId: number;
   name: string;
   imageURL: string;
   nickname: string;

@@ -1,6 +1,6 @@
 type pokemon = {
+  id: number;
   name: string;
-  image: string;
   moves: string[];
   types: string[];
 };
@@ -34,8 +34,9 @@ export const savePokemon = (pokemon: pokemon, nickname: string) => {
     let newPokemon = [
       ...myPokemon,
       {
+        id: `${pokemon.name}-${myPokemon.length}-${nickname}`,
+        pokemonId: pokemon.id,
         name: pokemon.name,
-        imageURL: pokemon.image,
         nickname: nickname,
       },
     ];
