@@ -48,7 +48,7 @@ const PokemonDetail = () => {
   useEffect(() => {
     data?.pokemon?.id &&
       data.pokemon.id !== "" &&
-      setImage(`https://github.com/PokeAPI/sprites/tree/master/sprites/pokemon/other/dream-world/${data.pokemon.id}.svg`);
+      setImage(`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/${data.pokemon.id}.svg`);
   }, [data]);
 
   const getStat = (stat: any[]) => {

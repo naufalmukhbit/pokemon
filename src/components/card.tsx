@@ -16,7 +16,7 @@ interface PokemonListCardProps {
 }
 
 const PokemonListCard = ({ data }: PokemonListCardProps) => {
-  const image = `https://github.com/PokeAPI/sprites/tree/master/sprites/pokemon/other/dream-world/${data.id}.svg`
+  const image = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/${data.id}.svg`
   return (
     <Link to={`/pokemon/${data.name}`} css={styles.cardContainer}>
       <div css={styles.pokemonInfoContainer}>
@@ -47,7 +47,7 @@ interface MyPokemonCardProps {
 
 const MyPokemonCard = ({ data }: MyPokemonCardProps) => {
   const [deleteConfirmation, setDeleteConfirmation] = useState(false);
-  const image = `https://github.com/PokeAPI/sprites/tree/master/sprites/pokemon/other/dream-world/${data.pokemonId}.svg`
+  const image = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/${data.pokemonId}.svg`
   const onDelete = () => {
     releasePokemon(data.nickname);
     window.location?.reload();
